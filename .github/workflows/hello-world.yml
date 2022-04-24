@@ -20,7 +20,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: kubectl get pods -A
+        run: ls -la 
 
       # Runs docker hello-world
       - name: Hello from Docker
