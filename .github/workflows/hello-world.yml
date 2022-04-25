@@ -27,11 +27,6 @@ jobs:
            echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
            sudo apt-get update
            sudo apt-get install helm
-
-
-      # Runs docker hello-world
-      - name: Hello from Docker
-        run: docker run hello-world
         
       # Intstall kubetctl
       - name: Intstall kubetctl
@@ -51,3 +46,10 @@ jobs:
         run: |
           ls -l
           kubectl get namespaces
+  
+      # Build and test App Docker Image
+      - name: Build and test App Docker Image
+        run: |
+          cd GolangApp/
+          docker build --tag nexo-app .
+          docker run --rm  nexo-app
