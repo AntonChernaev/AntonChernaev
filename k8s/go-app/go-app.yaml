@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: nexo-app-db
   labels:
-    name: nexo=app-db
+    name: nexo-app-db
 
 ---
 
