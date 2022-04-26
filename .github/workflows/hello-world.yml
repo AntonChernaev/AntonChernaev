@@ -53,3 +53,9 @@ jobs:
           cd GolangApp/
           docker build --tag nexo-app .
           docker run --rm  nexo-app
+          
+      # Build and test App Docker Image
+      - name: Deploy Go App to Kubernetes
+        run: |
+          cd k8s/go-app
+          kubectl apply -f go-app.yaml
