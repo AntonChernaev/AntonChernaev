@@ -57,5 +57,4 @@ jobs:
       # Build and test App Docker Image
       - name: Deploy Go App to Kubernetes
         run: |
-          cd k8s/go-app
-          kubectl apply -f go-app.yaml
+          kubectl apply -f k8s/go-app/go-app.yaml
