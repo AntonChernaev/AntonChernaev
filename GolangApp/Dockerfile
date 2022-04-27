@@ -2,14 +2,16 @@ FROM golang:1.16-alpine
 
 WORKDIR /app
 
-#COPY go.mod ./
-#COPY go.sum ./
-#RUN go mod download
+#COPY Nexo.go ./
+COPY Nexo-web-server.go ./
+COPY go.mod ./
 
-COPY Nexo.go ./
+RUN go mod download github.com/lib/pq
 
-RUN go build Nexo.go
+#RUN go build Nexo.go
+RUN go build Nexo-web-server.go
 
 EXPOSE 8080
+CMD [ "sh", "-c", "./Nexo-web-server $DBHOST" ]
 
-CMD [ "./Nexo" ]
+#docker build --tag nexo-app . - C:\Users\achernaev\Desktop\Nexo_zadacha\AntonChernaev\GolangApp
