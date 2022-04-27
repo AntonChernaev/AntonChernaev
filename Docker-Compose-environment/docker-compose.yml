@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  app:
+    image: nexo-app
+    environment:
+      - DBHOST=db
+    ports:
+      - "8080:8080"
+    depends_on:
+    - "db"
+    networks:
+      - appdbnet
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nexo
+    ports:
+      - '5432:5432'
+    networks:
+      - appdbnet    
+    volumes: 
+      - db:/var/lib/postgresql/data
+      - C:\Users\achernaev\Desktop\Nexo_zadacha\AntonChernaev\Postgres-db-sql\postgre-go-app.sql:/docker-entrypoint-initdb.d/postgre-go-app.sql
+volumes:
+  db:
+    driver: local
+networks:
+  appdbnet:
+    driver: bridge
+# docker compose -f c:\Users\achernaev\Desktop\Nexo_zadacha\AntonChernaev\Docker-Compose-environment\docker-compose.yml rm
