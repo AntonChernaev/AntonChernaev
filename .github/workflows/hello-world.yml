@@ -52,7 +52,6 @@ jobs:
         run: |
           cd GolangAppKubernetes/
           docker build --tag nexo-app-kubernetes .
-          # docker run --rm  nexo-app-kubernetes
           
       # Build and test App Docker Image
       - name: Deploy Go App to Kubernetes
