@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: nexo-app-db
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  postgre-go-app.sql: |
+    CREATE TABLE IF NOT EXISTS nexoapp (
+      greetings VARCHAR ( 50 ) UNIQUE NOT NULL,
+      username VARCHAR ( 50 ) UNIQUE NOT NULL
+    );
+    INSERT INTO nexoapp (greetings, username) VALUES ('Greetings from Postgre, Nexo :)', 'Anton Chernaev');

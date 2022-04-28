@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: nexo-app-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.1-alpine
+          env:
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: nexo
+          imagePullPolicy: "IfNotPresent"
+          lifecycle:
+            postStart:
+              exec:
+                command: ["sh", "-c", "ls"]
+                #command: ["psql", "-f", "/opt/postgre-go-app.sql", "-U", "postgres", "-d", "nexo"]
+                #command:
+                #  - sh
+                #  - "-c"
+                #  - "ls"
+                 # - "psql -f /opt/postgre-go-app.sql -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+                 # - "psql -f /opt/postgre-go-app.sql -U postgres -d nexo"
+                 # - "ls /opt/postgre-go-app.sql"
+          ports:
+            - containerPort: 5432
+          #envFrom:
+            #- configMapRef:
+                #name: postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-pv-volume
+            - name: postgresqlscript
+              mountPath: /opt/postgre-go-app.sql
+              subPath: postgre-go-app.sql
+      volumes:
+        - name: postgres-pv-volume
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+        - name:  postgresqlscript
+          configMap:
+            name: postgres-config    
+
+# kubectl exec -it [pod-name] --  psql -h localhost -U admin --password -p [port] postgresdb
+
+
