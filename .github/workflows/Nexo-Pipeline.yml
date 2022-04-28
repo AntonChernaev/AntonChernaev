@@ -1,0 +1,66 @@
+name: Nexo Pipeline
+
+# Controls when the action will run. 
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Install Helm
+        run: |
+           ls -la 
+           curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+           sudo apt-get install apt-transport-https --yes
+           echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+           sudo apt-get update
+           sudo apt-get install helm
+        
+      # Intstall kubetctl
+      - name: Intstall kubetctl
+        run: | 
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https ca-certificates curl
+          sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+          echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update
+          sudo apt-get install -y kubectl
+      - name: Setup kubeconfig
+        run: |
+          mkdir ${HOME}/.kube
+          echo ${{secrets.KUBE_CONFIG}} | base64 --decode > ${HOME}/.kube/config
+          kubectl config use-context kind-kind
+      - name: Test kubeconfig
+        run: |
+          ls -l
+          kubectl get namespaces
+  
+      # Build and test App Docker Image
+      - name: Build and test App Docker Image
+        run: |
+          cd GolangAppKubernetes/
+          docker build --tag nexo-app-kubernetes .
+          
+      # Build and test App Docker Image
+#      - name: Deploy Go App to Kubernetes with kubectl
+#        run: |
+#          kubectl apply -f k8s/go-app/go-app-kubernetes-namespace.yml
+#          kubectl apply -f k8s/go-app/go-app-kubernetes.yml
+
+      # Build and test App Docker Image
+      - name: Deploy Go App to Kubernetes with Helm   
+        run: |
+          cd   helm/Go_App/go-app-kubernetes
+          helm upgrade --install go-app-kubernetes .  --namespace nexo-app-db --create-namespace --atomic
+          
