@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app-kubernetes
+  namespace: nexo-app-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-app-kubernetes
+  template:
+    metadata:
+      labels:
+        app: go-app-kubernetes
+    spec:
+      containers:
+        - name: nexo-app-kubernetes
+          image: nexo-app-kubernetes:latest
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-app-kubernetes-svc
+  namespace: nexo-app-db
+  labels:
+    app: go-app
+spec:
+  type: NodePort
+  ports:
+   - port: 8080
+  selector:
+   app: go-app
