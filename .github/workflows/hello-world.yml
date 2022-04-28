@@ -50,11 +50,13 @@ jobs:
       # Build and test App Docker Image
       - name: Build and test App Docker Image
         run: |
-          cd GolangApp/
-          docker build --tag nexo-app .
-          docker run --rm  nexo-app
+          cd GolangAppKubernetes/
+          docker build --tag nexo-app-kubernetes .
+          docker run --rm  nexo-app-kubernetes
           
       # Build and test App Docker Image
       - name: Deploy Go App to Kubernetes
         run: |
-          kubectl apply -f k8s/go-app/go-app.yaml
+          kubectl apply -f k8s/go-app/go-app-kubernetes-namespace.yml
+          kubectl apply -f k8s/go-app/go-app-kuberneetes.yml
+          
