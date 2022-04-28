@@ -35,3 +35,5 @@ spec:
    - port: 8080
   selector:
    app: go-app-kubernetes
+   
+# kubectl port-forward service/go-app-kubernetes-svc 8080:8080 -n nexo-app-db
