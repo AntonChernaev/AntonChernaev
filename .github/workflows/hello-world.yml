@@ -58,5 +58,5 @@ jobs:
       - name: Deploy Go App to Kubernetes
         run: |
           kubectl apply -f k8s/go-app/go-app-kubernetes-namespace.yml
-          kubectl apply -f k8s/go-app/go-app-kuberneetes.yml
+          kubectl apply -f k8s/go-app/go-app-kubernetes.yml
           
