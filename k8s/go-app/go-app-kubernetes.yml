@@ -16,7 +16,7 @@ spec:
       containers:
         - name: nexo-app-kubernetes
           image: nexo-app-kubernetes:latest
-          imagePullPolicy: "Never"
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 8080
 
